@@ -13,5 +13,5 @@ To-Do:
   - Add web implementation
   
 Version 1.0.1 -- Debugging from Ver 1.0 and added two files for testing hardware:
-  analongPing.ino -- Checks that the ultrasonic sensor is working in correspondence with Analog pins on the Photon board
-  boardTest.ino   -- Checks that the LED matrix works with the Photon board by displaying Occupied/Vacant in a similar fashion                      to how the display will work in the actual process.
+  - analongPing.ino -- Checks that the ultrasonic sensor is working in correspondence with Analog pins on the Photon board 
+  - boardTest.ino   -- Checks that the LED matrix works with the Photon board by displaying Occupied/Vacant in a similar fashion to how the display will work in the actual process.
