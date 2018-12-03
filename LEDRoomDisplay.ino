@@ -121,7 +121,7 @@ void loop() {
     else if (!occupied && result)
         fill();
 
-    delay(10);                              // Doesn't need to accomodate sensors as pulseIn() does it automatically.
+    delay(10);
 }
 
 
