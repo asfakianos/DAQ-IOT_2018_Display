@@ -15,3 +15,8 @@ To-Do:
 Version 1.0.1 -- Debugging from Ver 1.0 and added two files for testing hardware:
   - analongPing.ino -- Checks that the ultrasonic sensor is working in correspondence with Analog pins on the Photon board 
   - boardTest.ino   -- Checks that the LED matrix works with the Photon board by displaying Occupied/Vacant in a similar fashion to how the display will work in the actual process.
+
+
+Version 1.1.0 -- (Mostly) Final version of the project:
+  - Removed both test files.
+  - Edited the main (LEDRoomDisplay.ino) to only delay if there is a change made to the status of the room. Currently working on better contrast with dimmer lights.
