@@ -1,4 +1,5 @@
 // Using:          https://www.adafruit.com/product/420
+// Github Library: https://github.com/pkourany/RGBmatrixPanel_IDE
 
 /******************************************************************************
  *                                                                            *
@@ -30,38 +31,36 @@
 RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, false);     // Defining the matrix
 
 bool occupied = false;                      // Whether the room is occupied or not
-int textX = matrix.width();                 // The width of the LED matrix
-int textY = matrix.height();                // The height of the LED matrix
+
 int status = 0;                             // Will be published to the Particle website + used for LED text: 0 = vacant, 1 = occupied
 int numPassed = 0;                          // Tracking the total number passed (potentially deprecated?)
-uint16_t red =  0x1000;
-uint16_t green = 0x0080;
 
-static uint16_t boardColor = 0xFFFF;        // Color of text on the board
+uint16_t red =  0x1000;                     // Green color for the board.
+uint16_t green = 0x0080;                    // Red color for the board.
+static uint16_t boardColor;
 
 void setup() {
+    matrix.begin();
     // Sensor
     pinMode(TRIG, OUTPUT);
     pinMode(ECHO, INPUT);
 
-    // LED Matrix
-    matrix.fillScreen(matrix.Color333(0, 0, 0));
+    // Filling the matrix with an empty background (no light bg)
+    matrix.fillRect(0, 0, 32, 16, matrix.Color333(0, 0, 0));
+    // Setting the Cursor to the top left with 1 LED of padding.
     matrix.setCursor(1, 0);
     matrix.setTextSize(1);
-    matrix.setTextColor(green);
-    matrix.print("Occupied");
-    
-    Particle.variable("Occupied= ", occupied);                 // Status of the room.
-    Particle.variable("Num pass=", numPassed);
+    // Sets the color to yellow for testing purposes.
+    matrix.setTextColor(0xAFE5);
 }
 
 
 /* Checks if there is an object closer to the sensor than the door frame.
  * Returns true if the object is in the way, false if there is no interference.
  * Takes maxDist in inches as the maximum distance that a player can be at. */
-bool check(uint32_t maxDist) {
+bool refresh(uint32_t maxDist) {
 
-    uint32_t duration, inches, cm;
+    uint32_t duration, inches;
 
     digitalWriteFast(TRIG, HIGH);
     delayMicroseconds(10);
@@ -83,8 +82,9 @@ bool check(uint32_t maxDist) {
 
 
 void boardWrite(uint16_t color) {
-    matrix.setCursor(textX / 2, textY / 2);
     matrix.setTextColor(color);
+    matrix.fillScreen(0x9471);
+    matrix.setCursor(1, 0);
     
     if (occupied)
         matrix.print("Occupied");
@@ -98,6 +98,7 @@ void fill() {
     status = 1;                // Changing the status of the board & particle.var
     boardColor = 0x1000;       // Changing the color of the board to red (I think)
     occupied = true;
+    boardWrite(boardColor);
 }
 
 
@@ -105,22 +106,26 @@ void available() {
     status = 0;                  // Changing the status of the board & particle.var
     boardColor = 0x0080;         // Changing the color of the board to green (I think)
     occupied = false;
+    boardWrite(boardColor);
 }
 
 
 void loop() {
     // Checks the activity of the doorway.
-    bool result = check();
+    bool result = refresh(24);
     // Doesn't necessarily work due to only finding that the door is open
     // If occupied and there is someone at the door, we assume they leave?
-    if (occupied && result)
+    if (occupied && result){
         available();
-    
+        delay(1000);
+        }
     
     // If occupied and there is no longer someone in there, it remains occupied
-    else if (!occupied && result)
+    else if (!occupied && result){
         fill();
-
+        delay(1000);
+    }
+    
     delay(10);
 }
 
