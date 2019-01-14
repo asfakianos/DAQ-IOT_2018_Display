@@ -14,9 +14,9 @@
 
 #include <Adafruit_mfGFX.h>   // Core graphics library
 #include <RGBmatrixPanel.h>   // Hardware-specific library
-#include "math.h"
+#include <math.h>
 
-// Pin layout for our sensor. These should work despite the analog I/O as we let them function as on/off only
+// Pin layout for our sensor.
 #define TRIG A5
 #define ECHO A4
 
@@ -32,12 +32,9 @@ RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, false);     // Defining the matrix
 
 bool occupied = false;                      // Whether the room is occupied or not
 
-int status = 0;                             // Will be published to the Particle website + used for LED text: 0 = vacant, 1 = occupied
-int numPassed = 0;                          // Tracking the total number passed (potentially deprecated?)
-
 uint16_t red =  0x1000;                     // Green color for the board.
 uint16_t green = 0x0080;                    // Red color for the board.
-static uint16_t boardColor;
+uint16_t boardColor;
 
 void setup() {
     matrix.begin();
@@ -95,7 +92,6 @@ void boardWrite(uint16_t color) {
 
 
 void fill() {
-    status = 1;                // Changing the status of the board & particle.var
     boardColor = 0x1000;       // Changing the color of the board to red (I think)
     occupied = true;
     boardWrite(boardColor);
@@ -103,8 +99,7 @@ void fill() {
 
 
 void available() {
-    status = 0;                  // Changing the status of the board & particle.var
-    boardColor = 0x0080;         // Changing the color of the board to green (I think)
+    boardColor = 0x0080;        // Changing the color of the board to green (I think)
     occupied = false;
     boardWrite(boardColor);
 }
@@ -128,5 +123,4 @@ void loop() {
     
     delay(10);
 }
-
 
