@@ -20,3 +20,7 @@ Version 1.0.1 -- Debugging from Ver 1.0 and added two files for testing hardware
 Version 1.1.0 -- (Mostly) Final version of the project:
   - Removed both test files.
   - Edited the main (LEDRoomDisplay.ino) to only delay if there is a change made to the status of the room. Currently working on better contrast with dimmer lights.
+
+Version 1.2.0 -- Final version:
+  - Display now shows text properly, but text is limited by screen size. This causes text to wrap from the top row to the bottom
+  - Adjusted colors of display
